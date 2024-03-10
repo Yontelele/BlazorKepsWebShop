@@ -1,0 +1,39 @@
+﻿@page "/"
+@using static LaborationBlazorKepsWebShop.Pages.Checkout
+
+<PageTitle>Cap Web Shop</PageTitle>
+
+<h1 style="text-align: center">Larsson Cap Shop</h1>
+
+<div id="cap-grid" class="mt-5 row mx-auto">
+    @foreach (var cap in AllCaps)
+    {
+        <div class="col-md-3 mb-5">
+            <Caps Cap="cap" />
+        </div>
+    }
+</div>
+
+
+@code{
+    [Parameter]
+    public List<Cap> AllCaps { get; set; } = new(); 
+    
+    public class ShoppingCartService
+    {
+        public CustomerInfo? CustomerInfo { get; set; }
+        public List<Cap>? PurchasedItems { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllCaps.Add(new Cap(1, "The Panther", "Black", 549, "images/Keps1.png"));
+        AllCaps.Add(new Cap(2, "The Cock", "Red", 549, "images/Keps2.png"));
+        AllCaps.Add(new Cap(3, "The Black Sheep", "Black", 549, "images/Keps3.png"));
+        AllCaps.Add(new Cap(4, "The Cash Cow", "Blue", 549, "images/Keps4.png"));
+        AllCaps.Add(new Cap(5, "The GOAT", "Charcoal", 549, "images/Keps5.png"));
+        AllCaps.Add(new Cap(6, "The King Lion", "Brown", 549, "images/Keps6.png"));
+        AllCaps.Add(new Cap(7, "The Lone Wolf", "Black", 549, "images/Keps7.jpg"));
+        AllCaps.Add(new Cap(8, "The Baddest Boy", "White", 549, "images/Keps8.png"));
+    }
+} 

@@ -1,0 +1,144 @@
+﻿@page "/checkout"
+@using static LaborationBlazorKepsWebShop.Pages.ConfirmationPage
+@using static LaborationBlazorKepsWebShop.Pages.Home
+@inject ILocalStorageService localStorage
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject ShoppingCartService ShoppingCartService
+@using System.ComponentModel.DataAnnotations
+
+<h1 style="text-align: center">Checkout</h1>
+
+<div class="row justify-content-center">
+    @foreach (var cap in CapsInCart)
+    {
+        <div class="col-md-3 text-center">
+            <img src=@cap?.ImageUrl width="400" height="400" />
+            <h3><b>@cap?.Name</b></h3>
+            <p>@cap?.Color</p>
+            <p>Price: @cap?.Price kr</p>
+            <button class="btn btn-danger btn-lg" @onclick="() => RemoveFromCart(cap)">Remove from Cart</button>
+        </div>
+    }
+</div>
+
+@if(CapsInCart.Count == 0)
+{
+    <h3 style="text-align: center"><b>Your cart is empty</b></h3>
+}
+
+else
+{
+    <EditForm Model="@customerInfo">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-4 mt-5">
+                    <p class="text-center">In order to buy the products, you need to fill in your information.</p>
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <InputText id="firstName" class="form-control" @bind-Value="customerInfo.FirstName" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <InputText id="lastName" class="form-control" @bind-Value="customerInfo.LastName" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <InputText id="address" class="form-control" @bind-Value="customerInfo.Address" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <InputText id="email" class="form-control" @bind-Value="customerInfo.Email" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="phone">Telephone Number:</label>
+                        <InputText id="phone" class="form-control" @bind-Value="customerInfo.Phone" />
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-lg" @onclick="Submit">Buy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    public List<Cap> CapsInCart { get; set; } = new();
+    List<Cap> AllCaps { get; set; } = new();
+
+    public async Task AddToCart(int capId)
+    {
+        var cap = AllCaps.FirstOrDefault(c => c.Id == capId);
+        if (cap != null)
+        {
+            CapsInCart.Add(cap);
+            await localStorage.SetItemAsync("CapsInCart", CapsInCart);
+            await JSRuntime.InvokeVoidAsync("alert", "The cap has been added to the cart!");
+        }
+    }
+
+    public async Task RemoveFromCart(Cap cap)
+    {
+        CapsInCart.Remove(cap);
+        await localStorage.SetItemAsync("CapsInCart", CapsInCart);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllCaps.Add(new Cap(1, "The Panther", "Black", 549, "images/Keps1.png"));
+        AllCaps.Add(new Cap(2, "The Cock", "Red", 549, "images/Keps2.png"));
+        AllCaps.Add(new Cap(3, "The Black Sheep", "Black", 549, "images/Keps3.png"));
+        AllCaps.Add(new Cap(4, "The Cash Cow", "Blue", 549, "images/Keps4.png"));
+        AllCaps.Add(new Cap(5, "The GOAT", "Charcoal", 549, "images/Keps5.png"));
+        AllCaps.Add(new Cap(6, "The King Lion", "Brown", 549, "images/Keps6.png"));
+        AllCaps.Add(new Cap(7, "The Lone Wolf", "Black", 549, "images/Keps7.jpg"));
+        AllCaps.Add(new Cap(8, "The Baddest Boy", "White", 549, "images/Keps8.png"));
+
+        var capsInCart = await localStorage.GetItemAsync<List<Cap>>("CapsInCart");
+        if (capsInCart != null)
+        {
+            CapsInCart = capsInCart;
+        }
+    }
+}
+
+@code{
+    CustomerInfo customerInfo = new();
+
+    public class CustomerInfo
+    {
+        [Required]
+        public string? FirstName { get; set; }
+
+        [Required]
+        public string? LastName { get; set; }
+
+        [Required]
+        public string? Address { get; set; }
+
+        [Required]
+        public string? Email { get; set; }
+
+        [Required]
+        public string? Phone { get; set; }
+    }
+
+    public async Task Submit()
+    {
+        ShoppingCartService.CustomerInfo = customerInfo;
+        ShoppingCartService.PurchasedItems = CapsInCart;
+
+        NavigationManager.NavigateTo("/confirmation");
+        await localStorage.ClearAsync();
+        CapsInCart.Clear();
+    }
+}

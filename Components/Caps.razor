@@ -1,0 +1,18 @@
+﻿@using LaborationBlazorKepsWebShop.Classes;
+
+<div>
+    <a href="/product/@Cap?.Id">
+        <img src=@Cap?.ImageUrl width="250" height="250" />
+    </a>
+    
+    <h3><b>@Cap?.Name</b></h3>
+    
+    <p>@Cap?.Color</p>
+    
+    <p>Price: @Cap?.Price kr</p>
+</div>
+
+@code {
+    [Parameter]
+    public Cap? Cap { get; set; }
+}

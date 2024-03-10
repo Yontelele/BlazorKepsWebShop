@@ -1,0 +1,33 @@
+﻿@page "/product/6"
+@inherits LaborationBlazorKepsWebShop.Pages.Checkout
+
+<h1 style="text-align: center">The King Lion Trucker Animal Farm - Goorin Bros</h1>
+
+<div id="cap-grid" class="mt-5 row justify-content-center">
+    <div class="col-md-3 text-center">
+        <img src="images/Keps6Bild1.jpg" class="img-fluid" width="400" height="400" />
+    </div>
+    <div class="col-md-3 text-center">
+        <img src="images/Keps6Bild2.jpg" class="img-fluid" width="400" height="400" />
+    </div>
+    <div class="col-md-3 text-center">
+        <img src="images/Keps6Bild3.jpg" class="img-fluid" width="400" height="400" />
+    </div>
+    <div class="col-md-3 text-center">
+        <img src="images/Keps6Bild4.jpg" class="img-fluid" width="400" height="400" />
+    </div>
+</div>
+
+<b style="font-size: 2rem">549 KR</b>
+
+<div>
+    <select class="form-select" style="width: 200px;" disabled>
+        <option selected>One Size</option>
+    </select>
+</div>
+
+<p>In stock: ✅</p>
+
+<button class="btn btn-success btn-lg" @onclick="() => AddToCart(6)">Add to Cart</button>
+
+<p>🗸 1-2 business days delivery time <br /> 🗸 Free shipping <br /> 🗸 60 days return policy</p>

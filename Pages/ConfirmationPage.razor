@@ -1,0 +1,48 @@
+﻿@page "/confirmation"
+@using static LaborationBlazorKepsWebShop.Pages.Home
+@inject ShoppingCartService ShoppingCartService
+@inject NavigationManager NavigationManager
+
+<h1 style="text-align:center">Thank you for your purchase!</h1>
+
+<div class="d-flex justify-content-center">
+    <img src="images/ThankYouCheck.jpg" style="width: 250px; height: auto;" />
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 mt-5">
+            <p>Your information:</p>
+            <ol class="list-group list-group-numbered">
+                <li class="list-group-item"><b>First Name: </b> @ShoppingCartService.CustomerInfo.FirstName</li>
+                <li class="list-group-item"><b>Last Name:</b> @ShoppingCartService.CustomerInfo.LastName</li>
+                <li class="list-group-item"><b>Address: </b> @ShoppingCartService.CustomerInfo.Address</li>
+                <li class="list-group-item"><b>Email: </b> @ShoppingCartService.CustomerInfo.Email</li>
+                <li class="list-group-item mb-3"><b>Telephone Number: </b> @ShoppingCartService.CustomerInfo.Phone</li>
+            </ol>
+
+
+            <p>You bought:</p>
+            <ol class="list-group list-group-numbered">
+                @foreach (var item in ShoppingCartService.PurchasedItems)
+                {
+                    <li class="list-group-item">@item.Name</li>
+                }
+            </ol>
+
+            <p>Total price: @(ShoppingCartService.PurchasedItems.Count * 549) kr</p>
+
+
+            <button class="btn btn-primary mt-3" @onclick="GoToHome">Go to Home</button>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private void GoToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
